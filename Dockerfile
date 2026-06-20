@@ -1,11 +1,12 @@
-FROM nginx:alpine
+FROM ubuntu:24.04
 
-RUN apk add --no-cache wget unzip
+RUN apt-get update && \
+    apt-get install -y apache2 git && \
+    apt-get clean
 
-WORKDIR /tmp
-
-RUN wget https://www.free-css.com/assets/files/free-css-templates/download/page296/neogym.zip && \
-    unzip neogym.zip && \
-    cp -r neogym-html/* /usr/share/nginx/html/
+RUN git clone https://github.com/startbootstrap/startbootstrap-agency.git /tmp/site && \
+    cp -r /tmp/site/* /var/www/html/
 
 EXPOSE 80
+
+CMD ["apachectl", "-D", "FOREGROUND"]
